@@ -36,10 +36,13 @@ class App extends Component {
   }
 
   stopRecording() {
+    setTimeout(() => {
+      this.setState({ step: 4 });
+    }, 3000)
     this.setState({
       step: 3,
       record: false,
-    })
+    });
   }
 
   render() {
@@ -97,6 +100,11 @@ class App extends Component {
                   </div>
                   <br />
                   <p className="dark-gray b f3">Processing...</p>
+                </div>
+              )}
+              {step === 4 && (
+                <div style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
+                  <p className="dark-gray b f2">Result step will go here</p>
                 </div>
               )}
             </FadeIn>
