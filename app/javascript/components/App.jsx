@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom';
 // import { CSSTransition } from 'react-transition-group';
 import FadeIn from 'react-fade-in';
 import { IoIosRecording } from 'react-icons/io';
+import { FaStopCircle } from 'react-icons/fa';
 import { ReactMic } from '@cleandersonlobo/react-mic';
+import { PropagateLoader } from 'react-spinners';
 
 class App extends Component {
   constructor(props) {
@@ -65,17 +67,39 @@ class App extends Component {
           </FadeIn>
 
           <div>
-            <a
-              onClick={step === 1 ? this.startRecording : this.stopRecording}
+            {step === 1 && (
+              <a
+              onClick={this.startRecording}
               className="f3 grow no-underline br-pill ph5 pv3 mb2 dib white bg-dark-gray b"
               style={{ cursor: 'pointer' }}
-            >
-              <IoIosRecording style={{ fontSize: '25px', paddingRight: '5px', marginBottom: '-5px' }}/>
-              {' '}
-              {record ? 'Stop' : 'Start'}
-              {' '}
-              recording
-            </a>
+              >
+                <IoIosRecording style={{ fontSize: '25px', paddingRight: '5px', marginBottom: '-5px' }}/>
+                {' '}
+                Start recording
+              </a>
+            )}
+            <FadeIn transitionDuration={1000}>
+              {step === 2 && (
+                <a
+                onClick={this.stopRecording}
+                className="f3 grow no-underline br-pill ph5 pv3 mb2 dib white bg-dark-gray b"
+                style={{ cursor: 'pointer' }}
+                >
+                  <FaStopCircle style={{ fontSize: '25px', paddingRight: '5px', marginBottom: '-5px' }}/>
+                  {' '}
+                  Stop recording
+                </a>
+              )}
+              {step === 3 && (
+                <div style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
+                  <div style={{ display: 'inline-block', marginBottom: '50px' }}>
+                    <PropagateLoader />
+                  </div>
+                  <br />
+                  <p className="dark-gray b f3">Processing...</p>
+                </div>
+              )}
+            </FadeIn>
           </div>
         </div>
       </article>
