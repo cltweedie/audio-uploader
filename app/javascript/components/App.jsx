@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+// import { CSSTransition } from 'react-transition-group';
+import FadeIn from 'react-fade-in';
 import { IoIosRecording } from 'react-icons/io';
 import { ReactMic } from '@cleandersonlobo/react-mic';
 
@@ -46,6 +48,7 @@ class App extends Component {
     return (
       <article className="vh-100 dt w-100 bg-white">
         <div className="dtc v-mid tc ph3 ph4-l">
+          <FadeIn transitionDuration={1000}>
           {step === 1 ? (
             <h1 className="f6 f2-m f-subheadline-l fw6 tc dark-gray tc">Record something.</h1>
           ) : (
@@ -59,6 +62,7 @@ class App extends Component {
             />
           )
           }
+          </FadeIn>
 
           <div>
             <a
