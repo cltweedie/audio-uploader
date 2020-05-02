@@ -81,7 +81,6 @@ class App extends Component {
                 Start recording
               </a>
             )}
-            <FadeIn transitionDuration={1000}>
               {step === 2 && (
                 <a
                 onClick={this.stopRecording}
@@ -94,20 +93,23 @@ class App extends Component {
                 </a>
               )}
               {step === 3 && (
-                <div style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
-                  <div style={{ display: 'inline-block', marginBottom: '50px' }}>
-                    <PropagateLoader />
+                <FadeIn transitionDuration={1000}>
+                  <div style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
+                    <div style={{ display: 'inline-block', marginBottom: '50px' }}>
+                      <PropagateLoader />
+                    </div>
+                    <br />
+                    <p className="dark-gray b f3">Processing...</p>
                   </div>
-                  <br />
-                  <p className="dark-gray b f3">Processing...</p>
-                </div>
+                </FadeIn>
               )}
               {step === 4 && (
-                <div style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
-                  <p className="dark-gray b f2">Result step will go here</p>
-                </div>
+                <FadeIn transitionDuration={2000}>
+                  <div style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
+                    <p className="dark-gray b f2">Result step will go here</p>
+                  </div>
+                </FadeIn>
               )}
-            </FadeIn>
           </div>
           {/* dummy div to push content up - find better solution */}
           <div style={{ height: '200px' }} />
