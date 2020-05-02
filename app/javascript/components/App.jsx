@@ -101,6 +101,8 @@ class App extends Component {
               )}
             </FadeIn>
           </div>
+          {/* dummy div to push content up - find better solution */}
+          <div style={{ height: '200px' }} />
         </div>
       </article>
     );
