@@ -18,17 +18,16 @@
   font-family: 'Montserrat', sans-serif;
  }
 
- .fade-enter {
+ .my-node-enter {
   opacity: 0;
 }
-.fade-enter-active {
+.my-node-enter-active {
   opacity: 1;
-  transition: opacity 500ms;
+  transition: opacity 1000ms;
 }
-.fade-exit {
+.my-node-exit {
   opacity: 1;
 }
-.fade-exit-active {
+.my-node-exit-active {
   opacity: 0;
-  transition: opacity 500ms;
 }

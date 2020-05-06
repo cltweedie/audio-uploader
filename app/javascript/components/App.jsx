@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-// import { CSSTransition } from 'react-transition-group';
 import FadeIn from 'react-fade-in';
 import { IoIosRecording } from 'react-icons/io';
 import { FaStopCircle } from 'react-icons/fa';
@@ -15,9 +14,6 @@ class App extends Component {
       record: false,
       step: 1,
     };
-
-    this.startRecording = this.startRecording.bind(this);
-    this.stopRecording = this.stopRecording.bind(this);
   }
 
   onData(recordedBlob) {
@@ -28,14 +24,15 @@ class App extends Component {
     console.log('recordedBlob is: ', recordedBlob);
   }
 
-  startRecording() {
+  startRecording = () => {
     this.setState({
       record: true,
       step: 2,
     })
   }
 
-  stopRecording() {
+  stopRecording = () => {
+    // simulate waiting for response
     setTimeout(() => {
       this.setState({ step: 4 });
     }, 3000)
@@ -45,10 +42,60 @@ class App extends Component {
     });
   }
 
+  step1 = () => {
+    return (
+      <a
+        onClick={this.startRecording}
+        className="f3 grow no-underline br-pill ph5 pv3 mb2 dib white bg-dark-gray b"
+        style={{ cursor: 'pointer' }}
+      >
+        <IoIosRecording style={{ fontSize: '25px', paddingRight: '5px', marginBottom: '-5px' }}/>
+        {' '}
+        Start recording
+      </a>
+    );
+  }
+
+  step2 = () => {
+    return (
+      <a
+        onClick={this.stopRecording}
+        className="f3 grow no-underline br-pill ph5 pv3 mb2 dib white bg-dark-gray b"
+        style={{ cursor: 'pointer' }}
+      >
+        <FaStopCircle style={{ fontSize: '25px', paddingRight: '5px', marginBottom: '-5px' }}/>
+        {' '}
+        Stop recording
+      </a>
+    );
+  }
+
+  step3 = () => {
+    return (
+      <FadeIn transitionDuration={1000}>
+        <div style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
+          <div style={{ display: 'inline-block', marginBottom: '50px' }}>
+            <PropagateLoader />
+          </div>
+          <br />
+          <p className="dark-gray b f3">Processing...</p>
+        </div>
+      </FadeIn>
+    );
+  }
+
+  step4 = () => {
+    return (
+      <FadeIn transitionDuration={2000}>
+        <div style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
+          <p className="dark-gray b f2">Result step will go here</p>
+        </div>
+      </FadeIn>
+    );
+  }
+
   render() {
     const { record, step } = this.state;
-
-    console.log('record: ', record);
 
     return (
       <article className="vh-100 dt w-100 bg-white">
@@ -65,53 +112,13 @@ class App extends Component {
               strokeColor={record ? '#000000' : '#FFF'}
               backgroundColor="#FFF"
             />
-          )
-          }
+          )}
           </FadeIn>
 
           <div>
-            {step === 1 && (
-              <a
-              onClick={this.startRecording}
-              className="f3 grow no-underline br-pill ph5 pv3 mb2 dib white bg-dark-gray b"
-              style={{ cursor: 'pointer' }}
-              >
-                <IoIosRecording style={{ fontSize: '25px', paddingRight: '5px', marginBottom: '-5px' }}/>
-                {' '}
-                Start recording
-              </a>
-            )}
-              {step === 2 && (
-                <a
-                onClick={this.stopRecording}
-                className="f3 grow no-underline br-pill ph5 pv3 mb2 dib white bg-dark-gray b"
-                style={{ cursor: 'pointer' }}
-                >
-                  <FaStopCircle style={{ fontSize: '25px', paddingRight: '5px', marginBottom: '-5px' }}/>
-                  {' '}
-                  Stop recording
-                </a>
-              )}
-              {step === 3 && (
-                <FadeIn transitionDuration={1000}>
-                  <div style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
-                    <div style={{ display: 'inline-block', marginBottom: '50px' }}>
-                      <PropagateLoader />
-                    </div>
-                    <br />
-                    <p className="dark-gray b f3">Processing...</p>
-                  </div>
-                </FadeIn>
-              )}
-              {step === 4 && (
-                <FadeIn transitionDuration={2000}>
-                  <div style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
-                    <p className="dark-gray b f2">Result step will go here</p>
-                  </div>
-                </FadeIn>
-              )}
+            {this[`step${step}`]()}
           </div>
-          {/* dummy div to push content up - find better solution */}
+          {/* TODO: find a better solution to push content up */}
           <div style={{ height: '200px' }} />
         </div>
       </article>
