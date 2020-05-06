@@ -9,6 +9,21 @@ import { PropagateLoader } from 'react-spinners';
 import styles from '../styles';
 
 class App extends Component {
+  static postBlob(blob) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content
+
+    const file = new File([blob.blob], `audio-${(new Date).toISOString().replace(/:|\./g, '-')}.wav`, {
+      type: 'audio/wav'
+    });
+
+    var formData = new FormData();
+    formData.append('audio_filename', file.name);
+    formData.append('audio_blob', file);
+    formData.append('authenticity_token', csrfToken);
+
+    return axios.post('/submissions', formData)
+  }
+
   constructor(props) {
     super(props);
 
@@ -19,25 +34,12 @@ class App extends Component {
   }
 
   onStop = (blob) => {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').content
-
-    const file = new File([blob], `audio-${(new Date).toISOString().replace(/:|\./g, '-')}.wav`, {
-      type: 'audio/wav'
-    });
-
-    var formData = new FormData();
-    formData.append('audio_filename', file.name);
-    formData.append('audio_blob', file);
-    formData.append('authenticity_token', csrfToken);
-
-    axios
-      .post('/submissions', formData)
-      .then((res) => {
-        console.log(res);
-        this.setState({
-          step: 4,
-        });
+    this.constructor.postBlob(blob).then((res) => {
+      console.log(res);
+      this.setState({
+        step: 4,
       });
+    });
   }
 
   startRecording = () => {
