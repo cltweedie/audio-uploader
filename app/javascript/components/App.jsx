@@ -54,76 +54,76 @@ class App extends Component {
     });
   }
 
-  step1 = () => {
-    return (
-      <a
-        onClick={this.startRecording}
-        className="f3 grow no-underline br-pill ph5 pv3 mb2 dib white bg-dark-gray b"
-        style={styles.link}
-      >
-        <IoIosRecording style={styles.buttonIcon}/>
-        {' '}
-        Start recording
-      </a>
-    );
-  }
+  step1 = () => (
+    <a
+      onClick={this.startRecording}
+      className="f3 grow no-underline br-pill ph5 pv3 mb2 dib white bg-dark-gray b"
+      style={styles.link}
+    >
+      <IoIosRecording style={styles.buttonIcon}/>
+      {' '}
+      Start recording
+    </a>
+  )
 
-  step2 = () => {
-    return (
-      <a
-        onClick={this.stopRecording}
-        className="f3 grow no-underline br-pill ph5 pv3 mb2 dib white bg-dark-gray b"
-        style={styles.link}
-      >
-        <FaStopCircle style={styles.buttonIcon}/>
-        {' '}
-        Stop recording
-      </a>
-    );
-  }
+  step2 = () => (
+    <a
+      onClick={this.stopRecording}
+      className="f3 grow no-underline br-pill ph5 pv3 mb2 dib white bg-dark-gray b"
+      style={styles.link}
+    >
+      <FaStopCircle style={styles.buttonIcon}/>
+      {' '}
+      Stop recording
+    </a>
+  )
 
-  step3 = () => {
-    return (
-      <FadeIn transitionDuration={1000}>
-        <div style={styles.centeredDiv}>
-          <div style={styles.loaderWrapper}>
-            <PropagateLoader />
-          </div>
-          <br />
-          <p className="dark-gray b f3">Processing...</p>
+  step3 = () => (
+    <FadeIn transitionDuration={1000}>
+      <div style={styles.centeredDiv}>
+        <div style={styles.loaderWrapper}>
+          <PropagateLoader />
         </div>
-      </FadeIn>
-    );
-  }
+        <br />
+        <p className="dark-gray b f3">Processing...</p>
+      </div>
+    </FadeIn>
+  )
 
-  step4 = () => {
+  step4 = () => (
+    <FadeIn transitionDuration={2000}>
+      <div style={styles.centeredDiv}>
+        <p className="dark-gray b f2">Result step will go here</p>
+      </div>
+    </FadeIn>
+  )
+
+  introHeading = () => (
+    <h1 className="f6 f2-m f-subheadline-l fw6 tc dark-gray tc">Record something.</h1>
+  )
+
+  reactMic = () => {
+    const { record } = this.state;
+
     return (
-      <FadeIn transitionDuration={2000}>
-        <div style={styles.centeredDiv}>
-          <p className="dark-gray b f2">Result step will go here</p>
-        </div>
-      </FadeIn>
+      <ReactMic
+        record={record}
+        className="sound-wave"
+        onStop={this.onStop}
+        strokeColor={record ? '#000000' : '#FFF'}
+        backgroundColor="#FFF"
+      />
     );
   }
 
   render() {
-    const { record, step } = this.state;
+    const { step } = this.state;
 
     return (
       <article className="vh-100 dt w-100 bg-white">
         <div className="dtc v-mid tc ph3 ph4-l">
           <FadeIn transitionDuration={1000}>
-            {step === 1 ? (
-              <h1 className="f6 f2-m f-subheadline-l fw6 tc dark-gray tc">Record something.</h1>
-            ) : (
-              <ReactMic
-                record={record}
-                className="sound-wave"
-                onStop={this.onStop}
-                strokeColor={record ? '#000000' : '#FFF'}
-                backgroundColor="#FFF"
-              />
-            )}
+            {step === 1 ? this.introHeading() : this.reactMic() }
           </FadeIn>
 
           <div>
