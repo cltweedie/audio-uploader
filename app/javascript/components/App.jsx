@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
 import FadeIn from 'react-fade-in';
 import { IoIosRecording } from 'react-icons/io';
 import { FaStopCircle } from 'react-icons/fa';
 import { ReactMic } from '@cleandersonlobo/react-mic';
 import { PropagateLoader } from 'react-spinners';
+import styles from '../styles';
 
 class App extends Component {
   constructor(props) {
@@ -16,12 +18,26 @@ class App extends Component {
     };
   }
 
-  onData(recordedBlob) {
-    console.log('chunk of real-time data is: ', recordedBlob);
-  }
+  onStop = (blob) => {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content
 
-  onStop(recordedBlob) {
-    console.log('recordedBlob is: ', recordedBlob);
+    const file = new File([blob], `audio-${(new Date).toISOString().replace(/:|\./g, '-')}.wav`, {
+      type: 'audio/wav'
+    });
+
+    var formData = new FormData();
+    formData.append('audio_filename', file.name);
+    formData.append('audio_blob', file);
+    formData.append('authenticity_token', csrfToken);
+
+    axios
+      .post('/submissions', formData)
+      .then((res) => {
+        console.log(res);
+        this.setState({
+          step: 4,
+        });
+      });
   }
 
   startRecording = () => {
@@ -32,13 +48,9 @@ class App extends Component {
   }
 
   stopRecording = () => {
-    // simulate waiting for response
-    setTimeout(() => {
-      this.setState({ step: 4 });
-    }, 3000)
     this.setState({
-      step: 3,
       record: false,
+      step: 3,
     });
   }
 
@@ -47,9 +59,9 @@ class App extends Component {
       <a
         onClick={this.startRecording}
         className="f3 grow no-underline br-pill ph5 pv3 mb2 dib white bg-dark-gray b"
-        style={{ cursor: 'pointer' }}
+        style={styles.link}
       >
-        <IoIosRecording style={{ fontSize: '25px', paddingRight: '5px', marginBottom: '-5px' }}/>
+        <IoIosRecording style={styles.buttonIcon}/>
         {' '}
         Start recording
       </a>
@@ -61,9 +73,9 @@ class App extends Component {
       <a
         onClick={this.stopRecording}
         className="f3 grow no-underline br-pill ph5 pv3 mb2 dib white bg-dark-gray b"
-        style={{ cursor: 'pointer' }}
+        style={styles.link}
       >
-        <FaStopCircle style={{ fontSize: '25px', paddingRight: '5px', marginBottom: '-5px' }}/>
+        <FaStopCircle style={styles.buttonIcon}/>
         {' '}
         Stop recording
       </a>
@@ -73,8 +85,8 @@ class App extends Component {
   step3 = () => {
     return (
       <FadeIn transitionDuration={1000}>
-        <div style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
-          <div style={{ display: 'inline-block', marginBottom: '50px' }}>
+        <div style={styles.centeredDiv}>
+          <div style={styles.loaderWrapper}>
             <PropagateLoader />
           </div>
           <br />
@@ -87,7 +99,7 @@ class App extends Component {
   step4 = () => {
     return (
       <FadeIn transitionDuration={2000}>
-        <div style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
+        <div style={styles.centeredDiv}>
           <p className="dark-gray b f2">Result step will go here</p>
         </div>
       </FadeIn>
@@ -101,24 +113,24 @@ class App extends Component {
       <article className="vh-100 dt w-100 bg-white">
         <div className="dtc v-mid tc ph3 ph4-l">
           <FadeIn transitionDuration={1000}>
-          {step === 1 ? (
-            <h1 className="f6 f2-m f-subheadline-l fw6 tc dark-gray tc">Record something.</h1>
-          ) : (
-            <ReactMic
-              record={record}
-              className="sound-wave"
-              onStop={this.onStop}
-              onData={this.onData}
-              strokeColor={record ? '#000000' : '#FFF'}
-              backgroundColor="#FFF"
-            />
-          )}
+            {step === 1 ? (
+              <h1 className="f6 f2-m f-subheadline-l fw6 tc dark-gray tc">Record something.</h1>
+            ) : (
+              <ReactMic
+                record={record}
+                className="sound-wave"
+                onStop={this.onStop}
+                strokeColor={record ? '#000000' : '#FFF'}
+                backgroundColor="#FFF"
+              />
+            )}
           </FadeIn>
 
           <div>
             {this[`step${step}`]()}
           </div>
-          {/* TODO: find a better solution to push content up */}
+
+          {/* empty div to push vertically-aligned content up */}
           <div style={{ height: '200px' }} />
         </div>
       </article>
