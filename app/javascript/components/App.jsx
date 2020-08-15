@@ -16,7 +16,7 @@ class App extends Component {
       type: 'audio/wav'
     });
 
-    var formData = new FormData();
+    const formData = new FormData();
     formData.append('audio_filename', file.name);
     formData.append('audio_blob', file);
     formData.append('authenticity_token', csrfToken);
@@ -30,6 +30,7 @@ class App extends Component {
     this.state = {
       record: false,
       step: 1,
+      classifications: null,
     };
   }
 
@@ -38,6 +39,7 @@ class App extends Component {
       console.log(res);
       this.setState({
         step: 4,
+        classifications: eval(res.data.classifications),
       });
     });
   }
@@ -92,13 +94,47 @@ class App extends Component {
     </FadeIn>
   )
 
-  step4 = () => (
-    <FadeIn transitionDuration={2000}>
-      <div style={styles.centeredDiv}>
-        <p className="dark-gray b f2">Result step will go here</p>
-      </div>
-    </FadeIn>
-  )
+  step4 = () => {
+    const { classifications } = this.state;
+    const classificationsToRender = classifications.slice(0, 5);
+
+    if (classifications.length < 1) {
+      return (
+        <FadeIn transitionDuration={2000}>
+          <div style={styles.centeredDiv}>
+            <p className="dark-gray b f2">Sorry, we couldn't identify that sound.</p>
+          </div>
+        </FadeIn>
+      );
+    } else {
+      return (
+        <FadeIn transitionDuration={2000}>
+          <div style={styles.centeredDiv}>
+            <h2 className="f2 lh-title">Result</h2>
+            <table className="f3 lh-copy">
+              <thead>
+                <tr>
+                  <th>Prediction</th>
+                  <th>Confidence</th>
+                </tr>
+              </thead>
+              <tbody>
+                {classificationsToRender.map((c) => {
+                  console.log(c[0]);
+                  return (
+                    <tr key={c[0]}>
+                      <td>{c[0].replace(/_/g, ' ')}</td>
+                      <td>{c[1]}%</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        </FadeIn>
+      );
+    }
+  }
 
   introHeading = () => (
     <h1 className="f6 f2-m f-subheadline-l fw6 tc dark-gray tc">Record something.</h1>
