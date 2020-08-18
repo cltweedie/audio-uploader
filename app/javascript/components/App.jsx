@@ -30,6 +30,13 @@ class App extends Component {
     };
   }
 
+  reset = () => {
+    this.setState({
+      step: 1,
+      classifications: null,
+    })
+  }
+
   postBlob = (audio) => {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content
 
@@ -46,8 +53,6 @@ class App extends Component {
   }
 
   onStop = (audio) => {
-    console.log('onStop');
-    debugger;
     this.postBlob(audio).then((res) => {
       console.log(res);
       this.setState({
@@ -102,7 +107,7 @@ class App extends Component {
           <PropagateLoader />
         </div>
         <br />
-        <p className="dark-gray b f3">Processing...</p>
+        <p className="dark-gray b f3">Analysing...</p>
       </div>
     </FadeIn>
   )
@@ -133,12 +138,15 @@ class App extends Component {
               </thead>
               <tbody>
                 {classificationsToRender.map((c) => {
-                  console.log(c[0]);
+                  const confidence = parseInt(c[1])
+
+                  if (confidence < 1) return null;
+
                   return (
                     <tr key={c[0]}>
                       <td>{c[0].replace(/_/g, ' ')}</td>
                       <td style={{
-                        color: this.confidenceToColor(parseInt(c[1])),
+                        color: this.confidenceToColor(confidence),
                         fontWeight: 'bold',
                       }}>{c[1]}%</td>
                     </tr>
@@ -146,6 +154,14 @@ class App extends Component {
                 })}
               </tbody>
             </table>
+
+            <a
+              onClick={this.reset}
+              className="f5 grow no-underline br-pill ph5 pv3 mt3 mb2 dib white bg-dark-gray b"
+              style={styles.link}
+            >
+              Reset
+            </a>
           </div>
         </FadeIn>
       );
