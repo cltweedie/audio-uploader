@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import FadeIn from 'react-fade-in';
-import { IoIosRecording } from 'react-icons/io';
+import { IoIosRecording, IoMdRefresh } from 'react-icons/io';
 import { FaStopCircle } from 'react-icons/fa';
 import { ReactMic } from '@cleandersonlobo/react-mic';
 import { PropagateLoader } from 'react-spinners';
@@ -157,9 +157,11 @@ class App extends Component {
 
             <a
               onClick={this.reset}
-              className="f5 grow no-underline br-pill ph5 pv3 mt3 mb2 dib white bg-dark-gray b"
+              className="f5 grow no-underline br-pill ph5 pv3 mt5 mb2 dib white bg-dark-gray b"
               style={styles.link}
             >
+              <IoMdRefresh style={styles.buttonIcon}/>
+              {' '}
               Reset
             </a>
           </div>
