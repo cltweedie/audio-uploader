@@ -9,19 +9,15 @@ import { PropagateLoader } from 'react-spinners';
 import styles from '../styles';
 
 class App extends Component {
-  static postBlob(blob) {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').content
-
-    const file = new File([blob.blob], `audio-${(new Date).toISOString().replace(/:|\./g, '-')}.wav`, {
-      type: 'audio/wav'
-    });
+  static buildFormData(data) {
+    const { csrfToken, file } = data;
 
     const formData = new FormData();
     formData.append('audio_filename', file.name);
-    formData.append('audio_blob', file);
+    formData.append('file', file);
     formData.append('authenticity_token', csrfToken);
 
-    return axios.post('/submissions', formData)
+    return formData;
   }
 
   constructor(props) {
@@ -34,8 +30,25 @@ class App extends Component {
     };
   }
 
-  onStop = (blob) => {
-    this.constructor.postBlob(blob).then((res) => {
+  postBlob = (audio) => {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content
+
+    const file = new File(
+      [audio.blob],
+      `audio-${(new Date).toISOString().replace(/:|\./g, '-')}.wav`,
+      { type: 'audio/wav' }
+    );
+
+    return axios.post(
+      'https://audio-classifier-mf-ctweed.onrender.com/analyze',
+      this.constructor.buildFormData({ csrfToken, file }),
+    );
+  }
+
+  onStop = (audio) => {
+    console.log('onStop');
+    debugger;
+    this.postBlob(audio).then((res) => {
       console.log(res);
       this.setState({
         step: 4,
@@ -173,7 +186,9 @@ class App extends Component {
   }
 
   introHeading = () => (
-    <h1 className="f6 f2-m f-subheadline-l fw6 tc dark-gray tc">Record something.</h1>
+    <h1 className="f6 f2-m f-subheadline-l fw6 tc dark-gray tc">
+      Record something.
+    </h1>
   )
 
   reactMic = () => {
