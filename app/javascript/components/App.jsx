@@ -14,7 +14,7 @@ class App extends Component {
 
     const formData = new FormData();
     formData.append('audio_filename', file.name);
-    formData.append('file', file);
+    formData.append('audio_blob', file);
     formData.append('authenticity_token', csrfToken);
 
     return formData;
@@ -47,7 +47,7 @@ class App extends Component {
     );
 
     return axios.post(
-      'https://audio-app-mf-ct.herokuapp.com/analyze',
+      '/submissions',
       this.constructor.buildFormData({ csrfToken, file }),
     );
   }
