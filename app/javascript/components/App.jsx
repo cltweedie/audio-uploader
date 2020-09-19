@@ -47,7 +47,7 @@ class App extends Component {
     );
 
     return axios.post(
-      'https://audio-classifier-mf-ctweed.onrender.com/analyze',
+      'https://audio-app-mf-ct.herokuapp.com/analyze',
       this.constructor.buildFormData({ csrfToken, file }),
     );
   }
