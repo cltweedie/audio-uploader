@@ -39,10 +39,11 @@ class App extends Component {
 
   postBlob = (audio) => {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content
+    const fileName = `audio-${(new Date).toISOString().replace(/:|\./g, '-')}.wav`;
 
     const file = new File(
       [audio.blob],
-      `audio-${(new Date).toISOString().replace(/:|\./g, '-')}.wav`,
+      fileName,
       { type: 'audio/wav' }
     );
 
