@@ -4,7 +4,7 @@ class SubmissionsController < ApplicationController
     submission.audio = params[:audio_blob]
     submission.save!
 
-    response = RestClient.post('https://audio-app-mf-ct.herokuapp.com/analyze', filename: params[:audio_filename])
+    response = RestClient.post('https://audio-app-mf-ct.herokuapp.com/analyze', file: params[:audio_blob])
     render json: response
   end
 end
